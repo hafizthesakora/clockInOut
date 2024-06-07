@@ -1,5 +1,5 @@
 from ui_sidebar import Ui_MainWindow
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QCompleter, QTableWidgetItem, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QCompleter, QLabel, QTableWidgetItem, QMessageBox, QFileDialog, QVBoxLayout, QLineEdit, QDialog
 from PyQt5.QtCore import Qt, QStandardPaths
 from datetime import datetime
 from PyQt5 import QtCore
@@ -7,6 +7,40 @@ import pandas as pd
 import os
 
 import database
+
+class PinEntryDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Export Confirmation")
+
+        self.valid_pins = ["110098", "779890", "776654"]
+
+        layout = QVBoxLayout()
+
+        self.label = QLabel("Enter the six-digit PIN to confirm your role:")
+        layout.addWidget(self.label)
+
+        self.pin_input = QLineEdit()
+        self.pin_input.setEchoMode(QLineEdit.Password)
+        layout.addWidget(self.pin_input)
+
+        self.confirm_button = QPushButton("Confirm")
+        self.confirm_button.clicked.connect(self.confirm)
+        layout.addWidget(self.confirm_button)
+
+        self.cancel_button = QPushButton("Cancel")
+        self.cancel_button.clicked.connect(self.reject)
+        layout.addWidget(self.cancel_button)
+
+        self.setLayout(layout)
+
+    def confirm(self):
+        entered_pin = self.pin_input.text()
+        if entered_pin in self.valid_pins:
+            self.accept()
+        else:
+            QMessageBox.critical(self, "Error", "The PIN is unauthorized and cannot export.")
+
 
 class MySideBar(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -170,19 +204,27 @@ class MySideBar(QMainWindow, Ui_MainWindow):
         self.name.setText('')
         self.sync()
 
+    # def export_confirmation_dialog(self):
+    #     msgbox = QMessageBox()
+    #     msgbox.setText("Click OK to confirm Export")
+    #     msgbox.setWindowTitle("Export Confirmation")
+
+    #     # add OK and Cancel btns
+    #     msgbox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+    #     msgbox.setDefaultButton(QMessageBox.Ok)
+
+    #     # execute msgbox and wait for user's response
+    #     response = msgbox.exec_()
+
+    #     if response == QMessageBox.Ok:
+    #         self.export_employeeTransaction_toExcel()
+
+   
     def export_confirmation_dialog(self):
-        msgbox = QMessageBox()
-        msgbox.setText("Click OK to confirm Export")
-        msgbox.setWindowTitle("Export Confirmation")
+        pin_dialog = PinEntryDialog(self)
+        response = pin_dialog.exec_()
 
-        # add OK and Cancel btns
-        msgbox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        msgbox.setDefaultButton(QMessageBox.Ok)
-
-        # execute msgbox and wait for user's response
-        response = msgbox.exec_()
-
-        if response == QMessageBox.Ok:
+        if response == QDialog.Accepted:
             self.export_employeeTransaction_toExcel()
         
     def export_employeeTransaction_toExcel(self):
@@ -346,18 +388,10 @@ class MySideBar(QMainWindow, Ui_MainWindow):
 
 
     def export_visitor_confirmation_dialog(self):
-        msgbox = QMessageBox()
-        msgbox.setText("Click OK to confirm Export")
-        msgbox.setWindowTitle("Export Confirmation")
+        pin_dialog = PinEntryDialog(self)
+        response = pin_dialog.exec_()
 
-        # add OK and Cancel btns
-        msgbox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        msgbox.setDefaultButton(QMessageBox.Ok)
-
-        # execute msgbox and wait for user's response
-        response = msgbox.exec_()
-
-        if response == QMessageBox.Ok:
+        if response == QDialog.Accepted:
             self.export_visitorTransaction_toExcel()
 
     def export_visitorTransaction_toExcel(self):
@@ -510,18 +544,10 @@ class MySideBar(QMainWindow, Ui_MainWindow):
 
 
     def export_pob_confirmation_dialog(self):
-        msgbox = QMessageBox()
-        msgbox.setText("Click OK to confirm Export")
-        msgbox.setWindowTitle("Export Confirmation")
+        pin_dialog = PinEntryDialog(self)
+        response = pin_dialog.exec_()
 
-        # add OK and Cancel btns
-        msgbox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        msgbox.setDefaultButton(QMessageBox.Ok)
-
-        # execute msgbox and wait for user's response
-        response = msgbox.exec_()
-
-        if response == QMessageBox.Ok:
+        if response == QDialog.Accepted:
             self.export_pobTransaction_toExcel()
 
     def export_pobTransaction_toExcel(self):
