@@ -1,5 +1,5 @@
 from ui_sidebar import Ui_MainWindow
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QCompleter, QLabel, QTableWidgetItem, QMessageBox, QFileDialog, QVBoxLayout, QLineEdit, QDialog
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QCompleter, QLabel, QTableWidgetItem, QMessageBox, QFileDialog, QVBoxLayout, QLineEdit, QDialog
 from PyQt5.QtCore import Qt, QStandardPaths
 from datetime import datetime
 from PyQt5 import QtCore
@@ -163,21 +163,23 @@ class MySideBar(QMainWindow, Ui_MainWindow):
         date = self.dateEdit_clocking.text()
         time = datetime.now().strftime("%H:%M:%S")
         still_in = 'Yes'
-
-        database.insertTransactionData(name, status, time, date, still_in)
-        nameList = []
-        getPOB = database.view_POBData_Today(date)
-        #print('done')
-        for item in getPOB:
-            #if item[0] not in nameList:
-            nameList.append(item[1])
-        print('nameList is: ',nameList)
-        if name not in nameList:
-            database.insert_POBData(name, "Employee", still_in, date)
+        if name == '':
+            QMessageBox.critical(self, "Error", "Please enter Employee name")
         else:
-            database.update_POBData(still_in, name, date)
-        self.name.setText('')
-        self.sync()
+            database.insertTransactionData(name, status, time, date, still_in)
+            nameList = []
+            getPOB = database.view_POBData_Today(date)
+            #print('done')
+            for item in getPOB:
+                #if item[0] not in nameList:
+                nameList.append(item[1])
+            print('nameList is: ',nameList)
+            if name not in nameList:
+                database.insert_POBData(name, "Employee", still_in, date)
+            else:
+                database.update_POBData(still_in, name, date)
+            self.name.setText('')
+            self.sync()
 
 
     def clockOUT(self):
@@ -187,22 +189,24 @@ class MySideBar(QMainWindow, Ui_MainWindow):
         date = self.dateEdit_clocking.text()
         time = datetime.now().strftime("%H:%M:%S")
         still_in = 'No'
-
-        database.insertTransactionData(name, status, time, date, still_in)
-        nameList = []
-        getPOB = database.view_POBData_Today(date)
-        for item in getPOB:
-            #if item[0] not in nameList:
-            nameList.append(item[1])
-
-        if name not in nameList:
-            print(name , 'is not in List')
-            database.insert_POBData(name, "Employee", still_in, date)
+        if name == '':
+            QMessageBox.critical(self, "Error", "Please enter Employee name")
         else:
-            print(name , 'is in List')
-            database.update_POBData(still_in, name, date)
-        self.name.setText('')
-        self.sync()
+            database.insertTransactionData(name, status, time, date, still_in)
+            nameList = []
+            getPOB = database.view_POBData_Today(date)
+            for item in getPOB:
+                #if item[0] not in nameList:
+                nameList.append(item[1])
+
+            if name not in nameList:
+                print(name , 'is not in List')
+                database.insert_POBData(name, "Employee", still_in, date)
+            else:
+                print(name , 'is in List')
+                database.update_POBData(still_in, name, date)
+            self.name.setText('')
+            self.sync()
 
     # def export_confirmation_dialog(self):
     #     msgbox = QMessageBox()
@@ -320,30 +324,33 @@ class MySideBar(QMainWindow, Ui_MainWindow):
         time = datetime.now().strftime("%H:%M:%S")
         still_in = 'Yes'
 
-        database.insertVisitorData(visitorID, visitorName, visitorPhone, visitee, purpose, gender, floor, visitorCompany, status, time, date, still_in)
-
-        nameList = []
-        getPOB = database.view_POBData_Today(date)
-        #print('done')
-        for item in getPOB:
-            #if item[0] not in nameList:
-            nameList.append(item[1])
-        print('nameList is: ',nameList)
-        if visitorName not in nameList:
-            database.insert_POBData(visitorName, "Visitor", still_in, date)
+        if (visitorName) == '':
+            QMessageBox.critical(self, "Error", "Please enter Visitor name")
         else:
-            database.update_POBData(still_in, visitorName, date)
+            database.insertVisitorData(visitorID, visitorName, visitorPhone, visitee, purpose, gender, floor, visitorCompany, status, time, date, still_in)
 
-        self.visitorID.setText('')
-        self.visitorName.setText('')
-        self.visitorPhone.setText('')
-        self.purpose.setCurrentText('')
-        self.visitee.setText('')
-        self.gender.setCurrentText('')
-        self.floor.setCurrentText('')
-        self.visitorCompany.setText('')
-        self.lineEdit_visitorNameFilter.setText('')
-        self.sync()
+            nameList = []
+            getPOB = database.view_POBData_Today(date)
+            #print('done')
+            for item in getPOB:
+                #if item[0] not in nameList:
+                nameList.append(item[1])
+            print('nameList is: ',nameList)
+            if visitorName not in nameList:
+                database.insert_POBData(visitorName, "Visitor", still_in, date)
+            else:
+                database.update_POBData(still_in, visitorName, date)
+
+            self.visitorID.setText('')
+            self.visitorName.setText('')
+            self.visitorPhone.setText('')
+            self.purpose.setCurrentText('')
+            self.visitee.setText('')
+            self.gender.setCurrentText('')
+            self.floor.setCurrentText('')
+            self.visitorCompany.setText('')
+            self.lineEdit_visitorNameFilter.setText('')
+            self.sync()
 
 
     def visitorClockOUT(self):
@@ -359,32 +366,33 @@ class MySideBar(QMainWindow, Ui_MainWindow):
         date = self.dateEdit_visit_clocking.text()
         time = datetime.now().strftime("%H:%M:%S")
         still_in = 'No'
-
-        database.insertVisitorData(visitorID, visitorName, visitorPhone, visitee, purpose, gender, floor, visitorCompany, status, time, date, still_in)
-
-        nameList = []
-        getPOB = database.view_POBData_Today(date)
-        #print('done')
-        for item in getPOB:
-            #if item[0] not in nameList:
-            nameList.append(item[1])
-        print('nameList is: ',nameList)
-        if visitorName not in nameList:
-            database.insert_POBData(visitorName, "Visitor", still_in, date)
+        if visitorName == '':
+            QMessageBox.critical(self, "Error", "Please enter Visitor name")
         else:
-            database.update_POBData(still_in, visitorName, date)
+            database.insertVisitorData(visitorID, visitorName, visitorPhone, visitee, purpose, gender, floor, visitorCompany, status, time, date, still_in)
 
+            nameList = []
+            getPOB = database.view_POBData_Today(date)
+            #print('done')
+            for item in getPOB:
+                #if item[0] not in nameList:
+                nameList.append(item[1])
+            print('nameList is: ',nameList)
+            if visitorName not in nameList:
+                database.insert_POBData(visitorName, "Visitor", still_in, date)
+            else:
+                database.update_POBData(still_in, visitorName, date)
 
-        self.visitorID.setText('')
-        self.visitorName.setText('')
-        self.visitorPhone.setText('')
-        self.purpose.setCurrentText('')
-        self.visitee.setText('')
-        self.gender.setCurrentText('')
-        self.floor.setCurrentText('')
-        self.visitorCompany.setText('')
-        self.lineEdit_visitorNameFilter.setText('')
-        self.sync()
+            self.visitorID.setText('')
+            self.visitorName.setText('')
+            self.visitorPhone.setText('')
+            self.purpose.setCurrentText('')
+            self.visitee.setText('')
+            self.gender.setCurrentText('')
+            self.floor.setCurrentText('')
+            self.visitorCompany.setText('')
+            self.lineEdit_visitorNameFilter.setText('')
+            self.sync()
 
 
     def export_visitor_confirmation_dialog(self):
