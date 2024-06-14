@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>images/Logo_ENI.svg</normaloff>images/Logo_ENI.svg</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(233, 236, 39);
 background-color: rgb(255, 251, 0);</string>
@@ -765,10 +769,7 @@ border-radius: 8px;
          <item>
           <widget class="QComboBox" name="PurposeofVisit">
            <property name="styleSheet">
-            <string notr="true">
-
-
-</string>
+            <string notr="true"/>
            </property>
            <item>
             <property name="text">
