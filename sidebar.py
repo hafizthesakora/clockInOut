@@ -48,16 +48,26 @@ class MySideBar(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("Eni Ghana ClockInOut")
 
+        self.employee.setVisible(False)
+        self.visitor.setVisible(False)
+        self.dashboard.setVisible(False)
+        self.pob.setVisible(False)
+        self.visitor_dash.setVisible(False)
+
         self.employee.clicked.connect(self.switch_to_employee)
         self.visitor.clicked.connect(self.switch_to_visitor)
         self.dashboard.clicked.connect(self.switch_to_dashboard)
         self.pob.clicked.connect(self.switch_to_pob)
         self.visitor_dash.clicked.connect(self.switch_to_visitor_dash)
 
+        #Login
+        self.username = self.lineEdit_userName
+        self.password = self.lineEdit_Password
+        self.pushButton_login.clicked.connect(self.login)
+
         # Employee
 
         self.name = self.lineEdit_employeeName
-
         self.dateEdit_employeeDashDateFilter.dateTimeChanged.connect(self.viewEmployeeTransaction)
         self.lineEdit_employeeDashNameFilter.textChanged.connect(self.viewEmployeeTransaction)
 
@@ -123,7 +133,7 @@ class MySideBar(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(1)
 
     def switch_to_visitor_dash(self):
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(5)
 
     def switch_to_pob(self):
         self.stackedWidget.setCurrentIndex(2)
@@ -154,6 +164,19 @@ class MySideBar(QMainWindow, Ui_MainWindow):
         completer.setCaseSensitivity(Qt.CaseInsensitive)
         completer.setFilterMode(Qt.MatchContains)
         self.name.setCompleter(completer)
+
+     #Login
+    def login(self):
+        if self.username.text() == "admin" and self.password.text() == "admin@12345":
+            self.stackedWidget.setCurrentIndex(0)
+            self.employee.setVisible(True)
+            self.visitor.setVisible(True)
+            self.dashboard.setVisible(True)
+            self.pob.setVisible(True)
+            self.visitor_dash.setVisible(True)
+        else:
+            QMessageBox.critical(self, "Error", "Please enter the correct username and password")
+
 
             #print(employeeName)
     def clockIN(self):
